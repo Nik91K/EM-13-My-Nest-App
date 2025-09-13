@@ -1,4 +1,4 @@
-import { TypeOrmModuleOptions } from '@nestjs/typeorm'; import { registerAs } from '@nestjs/config'; 
+import { registerAs } from '@nestjs/config'; 
 
 export const databaseConfig = registerAs('database', () => ({ 
   type: process.env.DB_TYPE, 

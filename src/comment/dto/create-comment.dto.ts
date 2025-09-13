@@ -1,7 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsInt, IsNotEmpty, IsString, Max, Min } from "class-validator";
 
-export class CreateCommentNoSpecDto {
+export class CreateCommentDto {
+    @ApiProperty()
+    id: number
+
     @IsString()
     @IsNotEmpty()
     @ApiProperty({
@@ -18,12 +21,4 @@ export class CreateCommentNoSpecDto {
         description: "Rating of the establishment (1-5)"
     })
     readonly rating: number
-
-    @IsInt()
-    @IsNotEmpty()
-    @ApiProperty({
-        example: 1,
-        description: "ID of the reviewed establishment"
-    })
-    readonly establishmentId: number
 }
