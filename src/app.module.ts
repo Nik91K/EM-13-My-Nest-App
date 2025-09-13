@@ -2,15 +2,20 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm'; 
 import { ConfigModule, ConfigService } from '@nestjs/config'; 
 import { databaseConfig } from './database/database.config'; 
-import { CommentNoSpecModule } from './comment--no-spec/comment--no-spec.module';
 import { EstablishmentModule } from './establishment/establishment.module';
+import { CommentModule } from './comment/comment.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({ 
-  imports: [ ConfigModule.forRoot({ load: [databaseConfig], }), 
+  imports: [ ConfigModule.forRoot({ 
+    load: [databaseConfig],
+    isGlobal: true,
+    envFilePath: ".env"
+  }), 
   TypeOrmModule.forRootAsync({ 
     imports: [ConfigModule], 
     inject:[ConfigService], 
-    useFactory: (configService: ConfigService) => configService.get('database') as TypeOrmModuleOptions, }), CommentNoSpecModule, EstablishmentModule, ], 
+    useFactory: (configService: ConfigService) => configService.get('database') as TypeOrmModuleOptions, }), EstablishmentModule, CommentModule, AuthModule, ], 
   controllers: [], 
   providers: [], 
 }) 
