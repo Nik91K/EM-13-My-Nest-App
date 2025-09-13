@@ -1,26 +1,33 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Comment } from "src/comment/entities/comment.entity";
+import { Auth } from "src/auth/entities/auth.entity";
 
+@Entity()
 export class Establishment {
     @PrimaryGeneratedColumn()
     @ApiProperty()
     id: number
 
-    @Column({type: "text", length: 255})
+    @Column({type: "text" })
     name: string
 
-    @Column({ type: "text", length: 500 })
+    @Column({ type: "text" })
     address: string
 
-    @Column({ type: "text", nullable: true})
+    @Column({ type: "text" })
     description?: string
 
-    @Column({ type: "int"})
+    @Column({ type: "int", default: 0})
     totalSeats: number
 
     @CreateDateColumn({ type: "timestamp" })
     createdAt: Date
 
-    
+    @OneToMany(() => Comment, (comment) => comment.establishment)
+    comments: Comment[]
+
+    @OneToMany(() => Auth, (auth) => auth.establishment)
+    users: Auth[]
 
 }

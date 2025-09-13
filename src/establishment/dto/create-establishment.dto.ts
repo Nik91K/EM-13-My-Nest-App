@@ -1,6 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsNotEmpty, IsNumber, Min } from "class-validator";
-
 export class CreateEstablishmentDto {
     @IsString()
     @IsNotEmpty()

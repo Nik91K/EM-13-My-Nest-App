@@ -16,7 +16,7 @@ export class UpdateEstablishmentDto {
         example: "Haharina St, 29, Cherkasy, Cherkasy Oblast, 18000",
         description: "Address of the establishment"
     })
-    address: string
+    address?: string
 
     @IsString()
     @IsNotEmpty()
