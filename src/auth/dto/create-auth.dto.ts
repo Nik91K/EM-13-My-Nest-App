@@ -9,13 +9,13 @@ export class CreateAuthDto {
 
     @IsString()
     @IsEmail()
-    @ApiProperty({example: "main@example.com", description: "Email"})
+    @ApiProperty({example: "test@example.com", description: "Email"})
     email: string
 
-    // @IsString()
-    // @MinLength(8)
-    // @ApiProperty({example: "Qwerty123", description: "Password"})
-    // password: string
+    @IsString()
+    @MinLength(8)
+    @ApiProperty({example: "Password123", description: "Password"})
+    password: string
 
     @IsEnum(UserRole)
     @ApiProperty({example: UserRole.CLIENT, description: "User role", enum: UserRole, default: UserRole.CLIENT})
