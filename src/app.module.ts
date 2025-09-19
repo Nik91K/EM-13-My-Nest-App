@@ -15,7 +15,11 @@ import { AuthModule } from './auth/auth.module';
   TypeOrmModule.forRootAsync({ 
     imports: [ConfigModule], 
     inject:[ConfigService], 
-    useFactory: (configService: ConfigService) => configService.get('database') as TypeOrmModuleOptions, }), EstablishmentModule, CommentModule, AuthModule, ], 
+    useFactory: (configService: ConfigService) => configService.get('database') as TypeOrmModuleOptions, }), 
+    EstablishmentModule, 
+    CommentModule, 
+    AuthModule, 
+  ], 
   controllers: [], 
   providers: [], 
 }) 
