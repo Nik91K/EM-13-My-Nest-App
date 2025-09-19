@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Comment } from "src/comment/entities/comment.entity";
-import { Auth } from "src/auth/entities/auth.entity";
+import { User } from "src/auth/entities/user.entity";
 
 @Entity()
 export class Establishment {
@@ -27,7 +27,7 @@ export class Establishment {
     @OneToMany(() => Comment, (comment) => comment.establishment)
     comments: Comment[]
 
-    @OneToMany(() => Auth, (auth) => auth.establishment)
-    users: Auth[]
+    @OneToMany(() => User, (user) => user.establishment)
+    moderators: User[]
 
 }
