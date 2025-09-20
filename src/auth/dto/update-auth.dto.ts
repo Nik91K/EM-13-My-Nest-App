@@ -7,6 +7,11 @@ export class UpdateAuthDto {
     @ApiProperty({example: 'Name', description: 'User name'})
     name?: string
 
+    @IsString()
+    @MinLength(8)
+    @ApiProperty({example: "Password123", description: "Password"})
+    password?: string
+
     @IsEnum(UserRole)
     @ApiProperty({example: UserRole.CLIENT, description: "User role", enum: UserRole, default: UserRole.CLIENT})
     role?: UserRole

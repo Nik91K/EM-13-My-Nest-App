@@ -14,7 +14,7 @@ import * as bcrypt from 'bcrypt';
 export class AuthService {
  constructor(
     @InjectRepository(User)
-    private readonly userRepo: Repository<User>,
+    private userRepo: Repository<User>,
     private readonly jwtService: JwtService,
   ){}
 
@@ -67,4 +67,29 @@ export class AuthService {
       throw new UnauthorizedException('Invalid refresh token')
     }
   }
+
+  async findAll () {
+    const user = await this.userRepo.find({relations: ['establishment']})
+    return user.map(user => user)
+  }
+
+  async update(id: number, dto: UpdateAuthDto) {
+    const user = await this.userRepo.findOneBy({ id })
+    if (!user) return null
+
+    if (dto.password) {
+      dto.password = await bcrypt.hash(dto.password, 10)
+    }
+
+    Object.assign(user, dto)
+    return this.userRepo.save(user)
+  }
+
+
+  async deleteUser(id: number) {
+    const user = await this.userRepo.findOneBy({id})
+    await this.userRepo.delete(id)
+    return user
+  }
+
 }

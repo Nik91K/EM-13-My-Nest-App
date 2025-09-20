@@ -36,22 +36,22 @@ export class AuthController {
     return this.authService.refreshToken(refreshTokenDto.refreshToken)
   }
 
-  // @Get()
-  // @UseGuards(JwtAuthGuard)
-  // @ApiBearerAuth()
-  // @ApiOperation({ summary: 'Get all users' })
-  // @ApiResponse({ status: 200, description: 'Users retrieved successfully' })
-  // findAll() {
-  //   return this.authService.findAll()
-  // }
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get all users' })
+  @ApiResponse({ status: 200, description: 'Users retrieved successfully' })
+  findAll() {
+    return this.authService.findAll()
+  }
 
-  // @Delete(":id")
-  // @UseGuards(JwtAuthGuard)
-  // @ApiBearerAuth()
-  // @ApiOperation({ summary: 'Delete user' })
-  // @ApiResponse({ status: 200, description: 'User deleted successfully' })
-  // @ApiResponse({ status: 404, description: 'User not found' })
-  // remove(@Param('id') id: number) {
-  //   return this.authService.delete(id)
-  // }
+  @Delete(":id")
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete user' })
+  @ApiResponse({ status: 200, description: 'User deleted successfully' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  remove(@Param('id') id: number) {
+    return this.authService.deleteUser(id)
+  }
 }
