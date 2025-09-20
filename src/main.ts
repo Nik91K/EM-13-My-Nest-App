@@ -13,6 +13,7 @@ async function bootstrap() {
    .setTitle('My REST API') 
    .setDescription('The API description')
    .setVersion('1.0')
+   .addBearerAuth()
    .addTag('users')
    .build(); 
   app.getHttpAdapter().get('/', (req, res) => {
