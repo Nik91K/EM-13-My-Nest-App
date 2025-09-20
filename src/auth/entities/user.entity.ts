@@ -1,10 +1,10 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { UserRole } from "../UserRole";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { UserRole } from "../../availability/UserRole";
 import { Establishment } from "src/establishment/entities/establishment.entity";
+import { Booking } from "src/booking/entities/booking.entity";
 
 @Entity()
 export class User {
-    [x: string]: any;
     @PrimaryGeneratedColumn()
     id: number
 
@@ -26,4 +26,6 @@ export class User {
     @ManyToOne(() => Establishment, (establishment) => establishment.moderators, {nullable: true, onDelete: 'SET NULL'})
     establishment?: Establishment
 
+    @OneToMany(() => Booking, (booking) => booking.user)
+    bookings: Booking[]
 }

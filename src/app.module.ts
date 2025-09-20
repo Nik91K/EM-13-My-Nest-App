@@ -5,6 +5,8 @@ import { databaseConfig } from './database/database.config';
 import { EstablishmentModule } from './establishment/establishment.module';
 import { CommentModule } from './comment/comment.module';
 import { AuthModule } from './auth/auth.module';
+import { AvailabilityModule } from './availability/availability.module';
+import { BookingModule } from './booking/booking.module';
 
 @Module({ 
   imports: [ ConfigModule.forRoot({ 
@@ -18,7 +20,7 @@ import { AuthModule } from './auth/auth.module';
     useFactory: (configService: ConfigService) => configService.get('database') as TypeOrmModuleOptions, }), 
     EstablishmentModule, 
     CommentModule, 
-    AuthModule, 
+    AuthModule, AvailabilityModule, BookingModule, 
   ], 
   controllers: [], 
   providers: [], 
