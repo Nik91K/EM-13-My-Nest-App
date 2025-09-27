@@ -3,7 +3,6 @@ import { BookingService } from './booking.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { UserRole } from 'src/availability/UserRole';
 
 @Controller('booking')
 export class BookingController {

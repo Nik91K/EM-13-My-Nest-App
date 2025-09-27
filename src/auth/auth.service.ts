@@ -2,12 +2,10 @@ import { ConflictException, Injectable, NotFoundException, UnauthorizedException
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { LoginDto } from './dto/login.dto';
-import { User } from './entities/user.entity';
-import { UserRole } from '../availability/UserRole';
+import { User, UserRole } from '../users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
-import { JwtAuthGuard } from './jwt-auth.guard';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -23,7 +21,7 @@ export class AuthService {
     if (existing) throw new ConflictException('User already exists')
 
     const hash = await bcrypt.hash(dto.password, 10)
-    const user = this.userRepo.create({ ...dto, password: hash })
+    const user = this.userRepo.create({ ...dto, password: hash });
     await this.userRepo.save(user)
 
     const tokens = await this.getTokens(user.id, user.email, user.role)

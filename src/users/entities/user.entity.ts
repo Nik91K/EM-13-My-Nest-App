@@ -29,4 +29,6 @@ export class User {
 
     @OneToMany(() => Booking, (booking) => booking.establishment)
     bookings: Booking[]
+
+    establishment:string
 }

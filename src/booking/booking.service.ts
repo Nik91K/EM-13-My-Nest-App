@@ -2,12 +2,11 @@ import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/commo
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/auth/entities/user.entity';
+import { User, UserRole } from '../users/entities/user.entity';
 import { Availability } from 'src/availability/entities/availability.entity';
 import { Establishment } from 'src/establishment/entities/establishment.entity';
 import { Repository } from 'typeorm';
 import { Booking } from './entities/booking.entity';
-import { UserRole } from 'src/availability/UserRole';
 import { AvailabilityService } from 'src/availability/availability.service';
 
 @Injectable()
@@ -56,29 +55,4 @@ export class BookingService {
       relations: ['user', 'establishment']
     })
   }
-
-  async findByEstablishment(establishmentId: number, userId: number): Promise<Booking[]> {
-    const user = await this.userRepository.findOne({ 
-      where: { id: userId },
-      relations: ['establishment']
-    })
-
-    if (!user) {
-      throw new NotFoundException('User not found')
-    }
-
-    if (user.role === UserRole.MODERATOR) {
-      if (!user.establishment || user.establishment.id !== establishmentId) {
-        throw new ForbiddenException('You can only view reservations for your establishment')
-      }
-    } else if (user.role !== UserRole.ADMIN) {
-      throw new ForbiddenException('Not enough access rights')
-    }
-
-    return await this.bookingRepository.find({
-      where: { establishment: { id: establishmentId } },
-      relations: ['user', 'establishment']
-    })
-  }
-
 }
