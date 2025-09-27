@@ -17,12 +17,20 @@ export class EstablishmentController {
     return this.establishmentService.create(createEstablishmentDto);
   }
 
-  @Get()
+  @Get('reservations')
   @ApiOperation({summary: 'Get all reservations from establishments'})
   @ApiResponse({ type: [Establishment], status: 200})
   getAllReservation(@Param('id') id:string) {
     return this.establishmentService.getAllReservation();
   }
+
+  @Get(':id/comments')
+  @ApiOperation({summary: 'Get all comments from establishments'})
+  @ApiResponse({ type: [Establishment], status: 200 })
+  getAllComments(@Param('id') id:string) {
+    return this.establishmentService.getAllComments(+id)
+  }
+
 
   @Patch(':id')
   @ApiOperation({summary: 'Updating information about establishment ///// MODERATOR, ADMIN'})

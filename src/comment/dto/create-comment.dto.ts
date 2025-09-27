@@ -21,4 +21,11 @@ export class CreateCommentDto {
         description: "Rating of the establishment (1-5)"
     })
     readonly rating: number
+
+    @IsInt()
+    @ApiProperty({
+        example: 1,
+        description: "Establishment id"
+    })
+    establishmentId: number
 }

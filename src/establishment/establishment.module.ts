@@ -9,5 +9,6 @@ import { Comment } from 'src/comment/entities/comment.entity';
   imports: [TypeOrmModule.forFeature([Establishment, Comment])],
   controllers: [EstablishmentController],
   providers: [EstablishmentService],
+  exports: [EstablishmentService],
 })
 export class EstablishmentModule {}

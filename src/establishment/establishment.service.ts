@@ -20,11 +20,25 @@ export class EstablishmentService {
     return this.establishmenrRepository.find()
   }
 
+  async getAllComments (id: number) {
+    const establishment = await this.establishmenrRepository.findOne({
+      where: { id: id },
+      relations: ['comments']
+    })
+
+    if(!establishment) {
+      throw new NotFoundException(`Establishment ${id} invalid`)
+    }
+
+    return establishment.comments
+  }
+
   async edit (id: number, updateEstablishmentDto: UpdateEstablishmentDto) {
     const establishment = await this.establishmenrRepository.findOneBy({id})
 
-    if(!establishment)
+    if(!establishment) {
       throw new NotFoundException(`Establishment ${id} invalid`)
+    }
 
     this.establishmenrRepository.merge(establishment, updateEstablishmentDto)
     return this.establishmenrRepository.save(establishment)
