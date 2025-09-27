@@ -84,10 +84,13 @@ export class AuthService {
   }
 
 
-  async deleteUser(id: number) {
-    const user = await this.userRepo.findOneBy({id})
-    await this.userRepo.delete(id)
-    return user
+async deleteUser(id: number) {
+  const user = await this.userRepo.findOneBy({ id });
+  if (!user) {
+    throw new NotFoundException(`User ${id} not found`);
   }
+  await this.userRepo.delete(id)
+  return user;
+}
 
 }
