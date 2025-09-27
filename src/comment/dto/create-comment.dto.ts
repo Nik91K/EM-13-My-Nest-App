@@ -28,4 +28,11 @@ export class CreateCommentDto {
         description: "Establishment id"
     })
     establishmentId: number
+
+    @IsInt()
+    @ApiProperty({
+        example: 1,
+        description: "User id"
+    })
+    userId: number
 }

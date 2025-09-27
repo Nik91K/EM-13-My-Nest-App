@@ -1,5 +1,6 @@
 import { Booking } from "../../booking/entities/booking.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Comment } from "src/comment/entities/comment.entity";
 
 export enum UserRole {
   USER = 'USER',
@@ -29,6 +30,9 @@ export class User {
 
     @OneToMany(() => Booking, (booking) => booking.establishment)
     bookings: Booking[]
+
+    @OneToMany(() => Comment, (comment) => comment.user, { cascade: true })
+    comments: Comment[]
 
     establishment:string
 }

@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Comment } from './entities/comment.entity';
 import { Repository } from 'typeorm';
 import { Establishment } from 'src/establishment/entities/establishment.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class CommentService {
@@ -13,19 +14,27 @@ export class CommentService {
     private commentRepository: Repository<Comment>,
     @InjectRepository(Establishment)
     private establishmentRepository: Repository<Establishment>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ){}
 
   async create (createCommentDto: CreateCommentDto) {
-    const { establishmentId, ...data } = createCommentDto
+    const { establishmentId, userId, ...data } = createCommentDto
     const establishment = await this.establishmentRepository.findOneBy({ id: establishmentId})
 
     if (!establishment) {
       throw new NotFoundException(`Establishment ${establishmentId} not found`);
     }
 
+    const user = await this.userRepository.findOneBy({ id:userId })
+    if (!user) {
+      throw new NotFoundException(`User ${userId} not found`);
+    }
+
     const comment = this.commentRepository.create({
       ...data,
-      establishment
+      establishment,
+      user
     })
 
     return this.commentRepository.save(comment)

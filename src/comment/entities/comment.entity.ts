@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Establishment } from "src/establishment/entities/establishment.entity";
+import { User } from "src/users/entities/user.entity";
 
 @Entity()
 export class Comment {
@@ -31,4 +32,6 @@ export class Comment {
     @ManyToOne(() => Establishment, (establishment) => establishment.comments, { eager: true, onDelete: 'CASCADE' })
     establishment: Establishment
 
+    @ManyToOne(() => User, (user) => user.comments, { onDelete: 'CASCADE' })
+    user: User
 }
