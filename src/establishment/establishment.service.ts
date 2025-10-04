@@ -9,19 +9,19 @@ import { Repository } from 'typeorm';
 export class EstablishmentService {
   constructor (
     @InjectRepository(Establishment)
-    private establishmenrRepository: Repository<Establishment>
+    private establishmentRepository: Repository<Establishment>
   ){}
 
   async create (createEstablishmentDto: CreateEstablishmentDto) {
-    return this.establishmenrRepository.save(this.establishmenrRepository.create(createEstablishmentDto))
+    return this.establishmentRepository.save(this.establishmentRepository.create(createEstablishmentDto))
   }
 
   async getAllReservation (): Promise<Establishment[]> {
-    return this.establishmenrRepository.find()
+    return this.establishmentRepository.find()
   }
 
   async getAllComments (id: number) {
-    const establishment = await this.establishmenrRepository.findOne({
+    const establishment = await this.establishmentRepository.findOne({
       where: { id: id },
       relations: ['comments']
     })
@@ -34,18 +34,18 @@ export class EstablishmentService {
   }
 
   async edit (id: number, updateEstablishmentDto: UpdateEstablishmentDto) {
-    const establishment = await this.establishmenrRepository.findOneBy({id})
+    const establishment = await this.establishmentRepository.findOneBy({id})
 
     if(!establishment) {
       throw new NotFoundException(`Establishment ${id} invalid`)
     }
 
-    this.establishmenrRepository.merge(establishment, updateEstablishmentDto)
-    return this.establishmenrRepository.save(establishment)
+    this.establishmentRepository.merge(establishment, updateEstablishmentDto)
+    return this.establishmentRepository.save(establishment)
   }
 
   async remove (id: number) {
-    const result = await this.establishmenrRepository.delete(id)
+    const result = await this.establishmentRepository.delete(id)
     return result
   }
 

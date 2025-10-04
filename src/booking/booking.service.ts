@@ -1,9 +1,7 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBookingDto } from './dto/create-booking.dto';
-import { UpdateBookingDto } from './dto/update-booking.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User, UserRole } from '../users/entities/user.entity';
-import { Availability } from 'src/availability/entities/availability.entity';
+import { User } from '../users/entities/user.entity';
 import { Establishment } from 'src/establishment/entities/establishment.entity';
 import { Repository } from 'typeorm';
 import { Booking } from './entities/booking.entity';
@@ -29,8 +27,8 @@ export class BookingService {
     }
 
     const establishment = await this.establishmentRepository.findOne({ 
-      where: { id: parseInt(createBookingDto.establishment) } 
-    });
+      where: { id: createBookingDto.establishment } 
+    })
     if (!establishment) {
       throw new NotFoundException('Establishment not found')
     }
@@ -38,14 +36,27 @@ export class BookingService {
     const bookingDate = createBookingDto.bookingDate
     const numberOfGuests = createBookingDto.numberOfGuests
 
-    await this.availabilityService.recordReservations(establishment.id, bookingDate, numberOfGuests);
+    if (numberOfGuests > establishment.totalSeats) {
+      throw new BadRequestException(`Number of guests exceeds total seats (${establishment.totalSeats})`)
+    }
+
+    try {
+      await this.availabilityService.recordReservations(
+        establishment.id,
+        bookingDate,
+        numberOfGuests
+      )
+    } catch (error) {
+      throw error
+    }
 
     const booking = this.bookingRepository.create({
-      ...createBookingDto,
       user,
       establishment,
       bookingDate: new Date(createBookingDto.bookingDate),
-    });
+      bookingTime: createBookingDto.bookingTime,
+      numberOfGuests: createBookingDto.numberOfGuests
+    })
 
     return await this.bookingRepository.save(booking)
   }

@@ -4,11 +4,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsOptional } from 'class-validator';
 import { BookingStatus } from '../entities/booking.entity';
 
-// extends PartialType(CreateBookingDto)
-
 export class UpdateBookingDto {
   @ApiProperty({ 
-    description: 'Статус бронювання', 
+    description: 'Reservation status', 
     enum: BookingStatus,
     required: false 
   })

@@ -2,12 +2,12 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsInt, IsDateString, Min, IsNotEmpty } from "class-validator";
 
 export class CreateBookingDto {
-    @ApiProperty({ description: 'Establishment ID for booking' })
-    @IsString()
+    @ApiProperty({ description: 'Establishment ID for booking', example: 1 })
+    @IsInt()
     @IsNotEmpty()
-    establishment: string;
+    establishment: number;
 
-    @ApiProperty({ description: 'Reservation date', example: '2024-12-25' })
+    @ApiProperty({ description: 'Reservation date', example: '2025-12-25' })
     @IsDateString()
     @IsNotEmpty()
     bookingDate: string;
@@ -17,7 +17,7 @@ export class CreateBookingDto {
     @IsNotEmpty()
     bookingTime: string;
 
-    @ApiProperty({ description: 'Number of guests', minimum: 1 })
+    @ApiProperty({ description: 'Number of guests', minimum: 1, example: 2 })
     @IsInt()
     @Min(1)
     numberOfGuests: number;

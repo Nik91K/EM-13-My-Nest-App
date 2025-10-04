@@ -26,8 +26,4 @@ export class Establishment {
 
     @OneToMany(() => Comment, (comment) => comment.establishment)
     comments: Comment[]
-
-    @ManyToMany(() => User, (user) => user.establishment)
-    moderators: User[]
-
 }

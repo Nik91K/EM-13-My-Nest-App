@@ -1,6 +1,7 @@
 import { Booking } from "../../booking/entities/booking.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Comment } from "src/comment/entities/comment.entity";
+import { Establishment } from "src/establishment/entities/establishment.entity";
 
 export enum UserRole {
   USER = 'USER',
@@ -33,6 +34,4 @@ export class User {
 
     @OneToMany(() => Comment, (comment) => comment.user, { cascade: true })
     comments: Comment[]
-
-    establishment:string
 }
