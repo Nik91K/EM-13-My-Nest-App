@@ -12,8 +12,8 @@ export class EstablishmentService {
     private establishmenrRepository: Repository<Establishment>
   ){}
 
-  async create (сreateEstablishmentDto: CreateEstablishmentDto) {
-    return this.establishmenrRepository.save(this.establishmenrRepository.create(сreateEstablishmentDto))
+  async create (createEstablishmentDto: CreateEstablishmentDto) {
+    return this.establishmenrRepository.save(this.establishmenrRepository.create(createEstablishmentDto))
   }
 
   async getAllReservation (): Promise<Establishment[]> {

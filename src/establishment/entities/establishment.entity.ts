@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Comment } from "../../comment/entities/comment.entity";
 import { User } from "../../users/entities/user.entity";
 
@@ -27,7 +27,7 @@ export class Establishment {
     @OneToMany(() => Comment, (comment) => comment.establishment)
     comments: Comment[]
 
-    @OneToMany(() => User, (user) => user.establishment)
+    @ManyToMany(() => User, (user) => user.establishment)
     moderators: User[]
 
 }

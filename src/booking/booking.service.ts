@@ -49,10 +49,5 @@ export class BookingService {
 
     return await this.bookingRepository.save(booking)
   }
-
-  async findAll(): Promise<Booking[]> {
-    return await this.bookingRepository.find({
-      relations: ['user', 'establishment']
-    })
-  }
+  
 }
