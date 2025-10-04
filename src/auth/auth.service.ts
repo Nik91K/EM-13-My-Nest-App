@@ -16,7 +16,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ){}
 
-  async register(dto: CreateAuthDto) {
+  async register (dto: CreateAuthDto) {
     const existing = await this.userRepo.findOne({ where: { email: dto.email } })
     if (existing) throw new ConflictException('User already exists')
 
@@ -28,7 +28,7 @@ export class AuthService {
     return { user, ...tokens }
   }
 
-  async login(dto: LoginDto) {
+  async login (dto: LoginDto) {
     const user = await this.userRepo.findOne({ where: { email: dto.email } })
     if (!user) throw new UnauthorizedException('Invalid credentials')
 
@@ -39,7 +39,7 @@ export class AuthService {
     return { user, ...tokens }
   }
 
-  async getTokens(userId: number, email: string, role: UserRole) {
+  async getTokens (userId: number, email: string, role: UserRole) {
     const payload = { sub: userId, email, role }
 
     const accessToken = await this.jwtService.signAsync(payload, {
@@ -55,7 +55,7 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  async refreshToken(refreshToken: string) {
+  async refreshToken (refreshToken: string) {
     try {
       const payload = await this.jwtService.verifyAsync(refreshToken, {
         secret: process.env.JWT_REFRESH_SECRET,
@@ -71,7 +71,7 @@ export class AuthService {
     return user.map(user => user)
   }
 
-  async update(id: number, dto: UpdateAuthDto) {
+  async update (id: number, dto: UpdateAuthDto) {
     const user = await this.userRepo.findOneBy({ id })
     if (!user) return null
 
@@ -83,14 +83,27 @@ export class AuthService {
     return this.userRepo.save(user)
   }
 
-
-async deleteUser(id: number) {
-  const user = await this.userRepo.findOneBy({ id });
-  if (!user) {
-    throw new NotFoundException(`User ${id} not found`);
+  async deleteUser (id: number) {
+    const user = await this.userRepo.findOneBy({ id });
+    if (!user) {
+      throw new NotFoundException(`User ${id} not found`);
+    }
+    await this.userRepo.delete(id)
+    return user;
   }
-  await this.userRepo.delete(id)
-  return user;
-}
+
+  async changeRole (id: number, role: UserRole) {
+    const user = await this.userRepo.findOneBy({ id });
+    if (!user) {
+      throw new NotFoundException(`User ${id} not found`);
+    }
+    user.role = role
+    await this.userRepo.save(user)
+
+    const tokens = await this.getTokens(user.id, user.email, user.role)
+
+    return { user, ...tokens, massage: 'Role updated' }
+
+  }
 
 }

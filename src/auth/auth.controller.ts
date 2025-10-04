@@ -2,10 +2,13 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@n
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
+import { ChangeRoleDto } from './dto/change-role.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from './jwt.guard';
+import { JwtAuthGuard, RolesGuard } from './jwt.guard';
 import { LoginDto } from './dto/login.dto';
+import { UserRole } from 'src/users/entities/user.entity';
+import { Roles } from './decorators/roles.decorator';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -43,6 +46,18 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'Users retrieved successfully' })
   findAll() {
     return this.authService.findAll()
+  }
+
+  @Patch(':id/role')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @Roles(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Change user role' })
+  @ApiResponse({ status: 200, description: 'Role successfully changed' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 403, description: 'Not enough rights' })
+  changeRole(@Param('id') id: number, @Body() changeRoleDto: ChangeRoleDto ) {
+    return this.authService.changeRole(id, changeRoleDto.role)
   }
 
   @Delete(":id")

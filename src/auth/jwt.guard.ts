@@ -7,6 +7,7 @@ import { UserRole } from '../users/entities/user.entity';
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {}
 
+@Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
