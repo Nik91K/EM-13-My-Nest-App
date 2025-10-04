@@ -1,9 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, ParseIntPipe } from '@nestjs/common';
 import { AvailabilityService } from './availability.service';
-import { GetAvailabilityDto } from './dto/get-availability.dto';
 import { ReservationDto } from './dto/reservation-availability.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { SetAvailabilityDto } from './dto/set-availability.dto';
 
 @Controller('availability')
 export class AvailabilityController {
@@ -21,4 +19,10 @@ export class AvailabilityController {
     return { message: 'Reservation recorded successfully' };
   }
 
+  @Get(':id')
+  @ApiOperation({ summary: 'Get the availability of places in a specific establishment' })
+  @ApiResponse({ status: 200, description: 'Availability records retrieved successfully' })
+  async getEstablishmentAvailability(@Param('id', ParseIntPipe) id: number ) {
+    return this.availabilityService.getEstablishmentAvailability(id)
+  }
 }

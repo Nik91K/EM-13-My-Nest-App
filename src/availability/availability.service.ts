@@ -1,6 +1,4 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateAvailabilityDto } from './dto/create-availability.dto';
-import { UpdateAvailabilityDto } from './dto/update-availability.dto';
 import { Availability } from './entities/availability.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -47,4 +45,28 @@ export class AvailabilityService {
     await this.availabilityRepo.save(record)
   }
 
+  async getEstablishmentAvailability(establishmentId: number) {
+    const establishment = await this.establishmentRepo.findOne({
+      where: { id: establishmentId }
+    })
+    
+    if (!establishment) {
+      throw new NotFoundException('Establishment not found');
+    }
+
+    const records = await this.availabilityRepo.find({
+      where: { 
+        establishment: { id: establishmentId }
+      },
+      order: {
+        date: 'ASC'
+      }
+    })
+
+    if (records.length === 0) {
+      throw new NotFoundException('No availability records found')
+    }
+
+    return records
+  }
 }
