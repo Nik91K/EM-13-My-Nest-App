@@ -3,7 +3,7 @@ import { CreateBookingDto } from './dto/create-booking.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../users/entities/user.entity';
 import { Establishment } from 'src/establishment/entities/establishment.entity';
-import { Between, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Booking, BookingStatus } from './entities/booking.entity';
 import { AvailabilityService } from 'src/availability/availability.service';
 

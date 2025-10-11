@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { EstablishmentService } from './establishment.service';
 import { CreateEstablishmentDto } from './dto/create-establishment.dto';
 import { UpdateEstablishmentDto } from './dto/update-establishment.dto';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { Establishment } from './entities/establishment.entity';
 
 @Controller('establishment')
@@ -11,38 +11,38 @@ export class EstablishmentController {
 
   @Post()
   @ApiOperation({ summary: 'Create establishment'})
-  @ApiResponse({ description: "Create success", type: Establishment, status: 201})
-  @ApiResponse({ description: "Bad request data", status: 400})
+  @ApiOkResponse({ description: "Create success", type: Establishment })
+  @ApiBadRequestResponse({ description: "Bad request data" })
   create(@Body() createEstablishmentDto: CreateEstablishmentDto) {
     return this.establishmentService.create(createEstablishmentDto);
   }
 
   @Get('reservations')
   @ApiOperation({summary: 'Get all reservations from establishments'})
-  @ApiResponse({ type: [Establishment], status: 200})
+  @ApiOkResponse({ type: [Establishment] })
   getAllReservation(@Param('id') id:string) {
     return this.establishmentService.getAllReservation();
   }
 
   @Get(':id/comments')
   @ApiOperation({summary: 'Get all comments from establishments'})
-  @ApiResponse({ type: [Establishment], status: 200 })
+  @ApiOkResponse({ type: [Establishment] })
   getAllComments(@Param('id') id:string) {
     return this.establishmentService.getAllComments(+id)
   }
 
 
   @Patch(':id')
-  @ApiOperation({summary: 'Updating information about establishment ///// MODERATOR, ADMIN'})
-  @ApiResponse({ type: Establishment, status: 200})
-  @ApiResponse({description:'Invalid id', status: 400})
+  @ApiOperation({summary: 'Updating information about establishment'})
+  @ApiOkResponse({ type: Establishment })
+  @ApiBadRequestResponse({description:'Invalid id'})
   update(@Param('id') id: string, @Body() updateEstablishmentDto: UpdateEstablishmentDto) {
     return this.establishmentService.edit(+id, updateEstablishmentDto);
   }
 
   @Delete(':id')
   @ApiOperation({summary: 'Delete establishment'})
-  @ApiResponse({description:'Invalid id', status: 400})
+  @ApiBadRequestResponse({description:'Invalid id'})
   remove(@Param('id') id: string) {
     return this.establishmentService.remove(+id);
   }

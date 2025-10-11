@@ -105,5 +105,4 @@ export class AuthService {
     return { user, ...tokens, massage: 'Role updated' }
 
   }
-
 }
