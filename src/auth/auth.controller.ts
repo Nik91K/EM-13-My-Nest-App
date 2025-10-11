@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { ChangeRoleDto } from './dto/change-role.dto';
@@ -18,8 +18,8 @@ export class AuthController {
   @ApiOperation({ summary: "Create new user" })
   @ApiOkResponse({ description: "User created" })
   @ApiConflictResponse({ description: "Email already in use" })
-  create(@Body() CreateAuthDto: CreateAuthDto) {
-    return this.authService.register(CreateAuthDto)
+  create(@Body() createAuthDto: CreateAuthDto) {
+    return this.authService.register(createAuthDto)
   }
 
   @Post('login')
@@ -38,8 +38,9 @@ export class AuthController {
     return this.authService.refreshToken(refreshTokenDto.refreshToken)
   }
 
-  @Get()
-  @UseGuards(JwtAuthGuard)
+  @Get('users')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get all users' })
   @ApiOkResponse({ description: 'Users retrieved successfully' })
@@ -59,13 +60,32 @@ export class AuthController {
     return this.authService.changeRole(id, changeRoleDto.role)
   }
 
-  @Delete(":id")
-  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete user' })
   @ApiOkResponse({ description: 'User deleted successfully' })
   @ApiNotFoundResponse({ description: 'User not found' })
   remove(@Param('id') id: number) {
     return this.authService.deleteUser(id)
+  }
+
+  @Post('logout')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Logout current user' })
+  @ApiOkResponse({ description: 'Logged out successfully' })
+  logout(@Request() request) {
+    return this.authService.logout(request.user.userId)
+  }
+
+  @Post('logout-all')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Logout from all devices' })
+  @ApiOkResponse({ description: 'Logged out from all devices successfully' })
+  logoutAllDevices(@Request() request) {
+    return this.authService.logoutAllDevices(request.user.userId);
   }
 }

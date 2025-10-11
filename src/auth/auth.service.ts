@@ -132,7 +132,7 @@ export class AuthService {
     return { message: 'Logget out' }
   }
 
-  async logoutAllDevice (userId: number) {
+  async logoutAllDevices (userId: number) {
     await this.refreshTokenRepo.delete({user: {id: userId}})
     return { message: 'Logget out from all device' }
   }
