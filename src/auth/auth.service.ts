@@ -7,12 +7,15 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { RefreshToken } from './entities/refresh-token.entity';
 
 @Injectable()
 export class AuthService {
  constructor(
     @InjectRepository(User)
     private userRepo: Repository<User>,
+    @InjectRepository(RefreshToken)
+    private refreshTokenRepo: Repository<RefreshToken>,
     private readonly jwtService: JwtService,
   ){}
 
@@ -52,10 +55,26 @@ export class AuthService {
       expiresIn: process.env.JWT_REFRESH_EXPIRES_IN,
     })
 
-    return { accessToken, refreshToken };
+    const hashedToken = await bcrypt.hash(refreshToken, 10)
+
+    const expiresAt = new Date()
+    const expiresInDays = parseInt(process.env.JWT_REFRESH_EXPIRES_IN ?? '7', 10);
+    expiresAt.setDate(expiresAt.getDate() + expiresInDays)
+
+    await this.refreshTokenRepo.delete({ user: { id: userId } })
+
+    const refreshTokenEntity = this.refreshTokenRepo.create({
+      hashedToken,
+      user: { id: userId },
+      expiresAt
+    })
+    await this.refreshTokenRepo.save(refreshTokenEntity)
+
+    return { accessToken, refreshToken }
   }
 
   async refreshToken (refreshToken: string) {
+    let payload: any
     try {
       const payload = await this.jwtService.verifyAsync(refreshToken, {
         secret: process.env.JWT_REFRESH_SECRET,
@@ -84,10 +103,13 @@ export class AuthService {
   }
 
   async deleteUser (id: number) {
-    const user = await this.userRepo.findOneBy({ id });
+    const user = await this.userRepo.findOneBy({ id })
+
     if (!user) {
-      throw new NotFoundException(`User ${id} not found`);
+      throw new NotFoundException(`User ${id} not found`)
     }
+
+    await this.refreshTokenRepo.delete({user: { id }})
     await this.userRepo.delete(id)
     return user;
   }
@@ -103,6 +125,16 @@ export class AuthService {
     const tokens = await this.getTokens(user.id, user.email, user.role)
 
     return { user, ...tokens, massage: 'Role updated' }
-
   }
+
+  async logout (userId: number) {
+    await this.refreshTokenRepo.delete({user: {id: userId}})
+    return { message: 'Logget out' }
+  }
+
+  async logoutAllDevice (userId: number) {
+    await this.refreshTokenRepo.delete({user: {id: userId}})
+    return { message: 'Logget out from all device' }
+  }
+
 }
