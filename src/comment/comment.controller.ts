@@ -5,7 +5,7 @@ import { UpdateCommentDto } from './dto/update-comment.dto';
 import { ApiBadRequestResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Comment } from './entities/comment.entity';
 
-@ApiTags("comments")
+@ApiTags("Comments")
 @Controller('comment')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
